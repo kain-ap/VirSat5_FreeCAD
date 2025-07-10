@@ -1,12 +1,8 @@
-# Ignore FreeCAD binaries and extracted files
-freecad/FreeCAD*
-freecad/bin/
-freecad/lib/
-freecad/*.7z
+# Ignore FreeCAD 
+freecad/
 
-# Ignore extracted A2plus (keep zip if needed)
-a2plus/A2plus-*
-a2plus/__pycache__/
+# Ignore extracted A2plus 
+a2plus/
 
 # Ignore Python virtual environment
 venv/
