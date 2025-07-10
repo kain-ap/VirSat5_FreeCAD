@@ -20,32 +20,47 @@ set "WORKBENCH_SRC=%PROJECT_ROOT%\workbench"
 set "MOD_DEST=%FREECAD_DIR%\Mod\%WORKBENCH_NAME%"
 set "REQUIREMENTS=%PROJECT_ROOT%\requirements.txt"
 
+REM === CREATE freecad and a2plus FOLDERS IF NOT EXIST ===
+if not exist "%FREECAD_DIR%" (
+    echo Creating freecad directory...
+    mkdir "%FREECAD_DIR%"
+) else (
+    echo freecad directory exists.
+)
+
+if not exist "%A2PLUS_DIR%" (
+    echo Creating a2plus directory...
+    mkdir "%A2PLUS_DIR%"
+) else (
+    echo a2plus directory exists.
+)
+
 REM === CHECK EXISTING FREECAD SETUP ===
 if exist "%FREECAD_EXE%" (
-    echo [✔] FreeCAD already extracted. Skipping setup.
+    echo FreeCAD already extracted. Skipping setup.
 ) else (
-    echo [➤] Setting up FreeCAD...
+    echo Setting up FreeCAD...
 
     if not exist "%FREECAD_ARCHIVE%" (
-        echo [⬇] Downloading FreeCAD...
+        echo Downloading FreeCAD...
         curl -L -o "%FREECAD_ARCHIVE%" "%FREECAD_URL%" || (
-            echo [✘] Failed to download FreeCAD.
+            echo Failed to download FreeCAD.
             exit /b
         )
     ) else (
-        echo [✔] FreeCAD.7z already exists.
+        echo FreeCAD.7z already exists.
     )
 
     REM === CLEAN TEMP DIR IF EXISTS ===
     if exist "%FREECAD_TEMP_DIR%" (
-        echo [🧹] Removing old temp FreeCAD folder...
+        echo Removing old temp FreeCAD folder...
         rmdir /S /Q "%FREECAD_TEMP_DIR%"
     )
 
     REM === Extract to TEMP directory ===
-    echo [📦] Extracting FreeCAD to temp dir...
+    echo Extracting FreeCAD to temp dir...
     "%SEVEN_ZIP_PATH%" x "%FREECAD_ARCHIVE%" -o"%FREECAD_TEMP_DIR%" -aoa >nul || (
-        echo [✘] Extraction failed.
+        echo Extraction failed.
         exit /b
     )
 
@@ -56,52 +71,52 @@ if exist "%FREECAD_EXE%" (
     )
 
     :move_files
-    echo [📁] Moving extracted contents from !INNER_EXTRACTED! to %FREECAD_DIR%...
+    echo Moving extracted contents from !INNER_EXTRACTED! to %FREECAD_DIR%...
     xcopy /E /Y "!INNER_EXTRACTED!\*" "%FREECAD_DIR%\" >nul
 
-    echo [🧽] Cleaning up temp folders...
+    echo Cleaning up temp folders...
     rmdir /S /Q "%FREECAD_TEMP_DIR%"
 )
 
 REM === COPY WORKBENCH INTO Mod FOLDER ===
 if exist "%MOD_DEST%\InitGui.py" (
-    echo [✔] Workbench already installed. Skipping copy.
+    echo Workbench already installed. Skipping copy.
 ) else (
-    echo [📁] Installing SatelliteWorkbench into FreeCAD/Mod...
+    echo Installing SatelliteWorkbench into FreeCAD/Mod...
     mkdir "%MOD_DEST%" >nul 2>&1
     xcopy /E /Y "%WORKBENCH_SRC%\*" "%MOD_DEST%" >nul
 )
 
 REM === SETUP A2PLUS ===
 if exist "%A2PLUS_EXTRACTED%" (
-    echo [✔] A2plus already extracted. Skipping.
+    echo A2plus already extracted. Skipping.
 ) else (
     if not exist "%A2PLUS_ZIP%" (
-        echo [⬇] Downloading A2plus...
+        echo Downloading A2plus...
         curl -L -o "%A2PLUS_ZIP%" "%A2PLUS_URL%" || (
-            echo [✘] Failed to download A2plus.
+            echo Failed to download A2plus.
             exit /b
         )
     ) else (
-        echo [✔] A2plus.zip already exists.
+        echo A2plus.zip already exists.
     )
 
-    echo [📦] Extracting A2plus...
+    echo Extracting A2plus...
     "%SEVEN_ZIP_PATH%" x "%A2PLUS_ZIP%" -o"%A2PLUS_DIR%" -aoa >nul || (
-        echo [✘] Failed to extract A2plus.
+        echo Failed to extract A2plus.
         exit /b
     )
 )
 
 REM === INSTALL PYTHON DEPENDENCIES ===
-echo [🐍] Installing Python dependencies...
+echo Installing Python dependencies...
 "%FREECAD_DIR%\bin\python.exe" -m pip install -r "%REQUIREMENTS%" >nul || (
     echo [✘] Failed to install Python dependencies.
     exit /b
 )
 
 REM === LAUNCH FREECAD ===
-echo [🚀] Launching FreeCAD...
+echo Launching FreeCAD...
 start "" "%FREECAD_EXE%"
 
 endlocal
