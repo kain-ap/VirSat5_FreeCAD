@@ -2,12 +2,12 @@ import FreeCAD
 import FreeCADGui
 import json
 import os
-from PySide import QtGui
-import Part
+from PySide import QtGui  # type: ignore
+import Part  # type: ignore
 import requests
 from config import BASE_URL, USERNAME, PASSWORD
 import time
-import traceback
+import traceback  # type: ignore
 
 # --- Configuration ---
 PROJECT_DIR = r"C:\git\VirtualSatellite5_FreeCAD"
