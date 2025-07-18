@@ -78,14 +78,11 @@ if exist "%FREECAD_EXE%" (
     rmdir /S /Q "%FREECAD_TEMP_DIR%"
 )
 
-REM === COPY WORKBENCH INTO Mod FOLDER ===
-if exist "%MOD_DEST%\InitGui.py" (
-    echo Workbench already installed. Skipping copy.
-) else (
-    echo Installing SatelliteWorkbench into FreeCAD/Mod...
-    mkdir "%MOD_DEST%" >nul 2>&1
-    xcopy /E /Y "%WORKBENCH_SRC%\*" "%MOD_DEST%" >nul
-)
+REM === COPY WORKBENCH INTO Mod FOLDER (ALWAYS) ===
+echo Updating SatelliteWorkbench in FreeCAD/Mod...
+mkdir "%MOD_DEST%" >nul 2>&1
+xcopy /E /Y "%WORKBENCH_SRC%\*" "%MOD_DEST%" >nul
+
 
 REM === SETUP A2PLUS ===
 if exist "%A2PLUS_EXTRACTED%" (
@@ -114,6 +111,13 @@ echo Installing Python dependencies...
     echo [✘] Failed to install Python dependencies.
     exit /b
 )
+
+REM === OPTIONAL: ENABLE DEBUG ===
+set "DEBUG_MODE=0"
+if "%1"=="--debug" (
+    set "DEBUG_MODE=1"
+)
+set "ENV_OPTS=env DEBUG_MODE=%DEBUG_MODE%"
 
 REM === LAUNCH FREECAD ===
 echo Launching FreeCAD...

@@ -5,7 +5,7 @@ from SatelliteImporter import ImportSatellite, UpdateSatellite
 class SatelliteImporterWorkbench(FreeCADGui.Workbench):
     MenuText = "Satellite Importer"
     ToolTip = "Workbench for importing satellite structures"
-    Icon = r"C:\git\VirtualSatellite-FreeCAD\Icons\satellite.svg"
+    Icon = r"C:\git\VirtualSatellite5_FreeCAD\workbench\resources\icons\satellite.svg"
 
     def Initialize(self):
         self.appendToolbar("Satellite", ["ImportSatellite", "UpdateSatellite"])

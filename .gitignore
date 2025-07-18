@@ -17,3 +17,5 @@ __pycache__/
 .vscode/
 .DS_Store
 Thumbs.db
+
+satellite_structure.json
